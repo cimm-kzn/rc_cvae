@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2024 Daniyar Mazitov <daniyarttt@gmail.com>
+# Copyright (c) 2024 Valentina Afonina <valiaafo@yandex.ru>
 #  This file is part of RC_CVAE
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -22,9 +23,12 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+from itertools import chain
 import math
 import operator
 import collections
+import pickle
+import pandas
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
@@ -583,7 +587,7 @@ def get_h_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds_dim
     return model, decoder
     
     
-def generate_gauss(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalyst_dim=297, pressure_dim=4, temperature_dim=3):
+def generate_gauss(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalyst_dim=297, pressure_dim=4, temperature_dim=3, top_k=100):
     hpu = tfp.distributions.Normal([0]*latent_dim, [1]*latent_dim)
 
     ans = np.concatenate(decoder.predict([X_test, K.eval(hpu._sample_n(len(X_test)))], batch_size=1024), axis=-1).astype('float16').reshape(-1, adds_dim+catalyst_dim+pressure_dim+temperature_dim)
@@ -619,11 +623,11 @@ def generate_gauss(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalys
     top_ans = []
     for i in range(len(d)):
         od = collections.OrderedDict(sorted(d[i].items(), key=operator.itemgetter(1), reverse=True))
-        top_n = np.array(list(od.items()))[:, 0][:100]
+        top_n = np.array(list(od.items()))[:, 0][:top_k]
         top_ans.append(top_n)
         
     for i in range(len(top_ans)):
-        while len(top_ans[i]) < 100:
+        while len(top_ans[i]) < top_k:
             tmp = list(top_ans[i])
             tmp.append(top_ans[i][-1])
             top_ans[i] = tmp
@@ -633,7 +637,7 @@ def generate_gauss(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalys
     return top_ans
     
     
-def generate_h(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalyst_dim=297, pressure_dim=4, temperature_dim=3):
+def generate_h(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalyst_dim=297, pressure_dim=4, temperature_dim=3, top_k=100):
     hpu = HypersphericalUniform(latent_dim-1)
 
     ans = np.concatenate(decoder.predict([X_test, K.eval(hpu._sample_n(len(X_test)))], batch_size=1024), axis=-1).astype('float16').reshape(-1, adds_dim+catalyst_dim+pressure_dim+temperature_dim)
@@ -669,11 +673,11 @@ def generate_h(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalyst_di
     top_ans = []
     for i in range(len(d)):
         od = collections.OrderedDict(sorted(d[i].items(), key=operator.itemgetter(1), reverse=True))
-        top_n = np.array(list(od.items()))[:, 0][:100]
+        top_n = np.array(list(od.items()))[:, 0][:top_k]
         top_ans.append(top_n)
         
     for i in range(len(top_ans)):
-        while len(top_ans[i]) < 100:
+        while len(top_ans[i]) < top_k:
             tmp = list(top_ans[i])
             tmp.append(top_ans[i][-1])
             top_ans[i] = tmp
@@ -681,4 +685,29 @@ def generate_h(X_test, decoder, latent_dim=32, s=5000, adds_dim=129, catalyst_di
     top_ans = np.array(top_ans)
     
     return top_ans
+    
+
+def convert_predictions(top_ans, X_test: pandas.DataFrame, y_train_final_columns: pandas.MultiIndex, id_field: str ='Transformation_ID'):
+    num_ranks = len(top_ans[0])
+    temperature_list = np.array(y_train_final_columns.get_loc_level('t')[1])
+    pressure_list = np.array(y_train_final_columns.get_loc_level('p')[1])
+    additives_list = np.array(y_train_final_columns.get_loc_level('acids_bases_poisons')[1])
+    catalysts_list = np.array(y_train_final_columns.get_loc_level('catalysts')[1])
+    
+    predictions = []
+    for prediction_list in top_ans:
+        ranked_predictions = []
+        for rank in prediction_list:
+            
+            ranked_predictions.append(', '.join(chain([temperature_list[rank[0]]],
+                            [pressure_list[rank[1]]],
+                            additives_list[rank[2:-1] == 1],
+                            [catalysts_list[rank[-1]]]))
+                            )
+        predictions.append(ranked_predictions)
+    predictions_df = pandas.DataFrame.from_records(predictions, columns=list(range(1, num_ranks+1)), index=X_test.index)
+    predictions_df.columns.name = 'ranks'
+    predictions_df.index.name = id_field
+    
+    return predictions_df
     

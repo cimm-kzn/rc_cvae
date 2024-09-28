@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools==59.6",
+            "setuptools-scm==6.4"]
+
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/cimm-kzn/rc_cvae"
+Issues = "https://github.com/cimm-kzn/rc_cvae/issues"
+

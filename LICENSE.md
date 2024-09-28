@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2024 Daniyar Mazitov <daniyarttt@gmail.com>
+Copyright (c) 2024 Valentina Afonina <valiaafo@yandex.ru>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
