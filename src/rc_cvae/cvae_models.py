@@ -349,6 +349,12 @@ def get_gauss_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds
     In1 = Input(shape=(in_dim,))
     In2 = Input(shape=(out_dim,))
     
+    t_bits = In2[:, :temperature_dim]
+    p_bits = In2[:, temperature_dim:pressure_dim]
+    
+    t_mask = K.sum(t_bits, axis=-1, keepdims=True)
+    p_mask = K.sum(p_bits, axis=-1, keepdims=True)
+    
     x = Dense(512, kernel_initializer='he_normal')(In1)
     x = BatchNormalization(axis=-1)(x)
     x = FTSwish()(x)
@@ -389,10 +395,15 @@ def get_gauss_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds
     catalyst = Dense(catalyst_dim, activation='softmax', kernel_initializer='glorot_normal')(x)
 
     decoder = Model(inputs=[In1, In_latent], outputs=[xt, xp, adds, catalyst])
+    
+    xt = xt * t_mask
+    xp = xp * p_mask
+    
+    train_decoder = Model(inputs=[In1, In2, In_latent], outputs=[xt, xp, adds, catalyst])
     #--------------------------------------------------------------------------
 
     e = encoder([In1, In2])
-    d = decoder([In1, e])
+    d = train_decoder([In1, In2, e])
 
     model = Model(inputs=[In1, In2], outputs=d)
     #--------------------------------------------------------------------------
@@ -416,6 +427,12 @@ def get_rnf_gauss_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, 
     
     In1 = Input(shape=(in_dim,))
     In2 = Input(shape=(out_dim,))
+    
+    t_bits = In2[:, :temperature_dim]
+    p_bits = In2[:, temperature_dim:pressure_dim]
+    
+    t_mask = K.sum(t_bits, axis=-1, keepdims=True)
+    p_mask = K.sum(p_bits, axis=-1, keepdims=True)
     
     x = Dense(512, kernel_initializer='he_normal')(In1)
     x = BatchNormalization(axis=-1)(x)
@@ -472,12 +489,17 @@ def get_rnf_gauss_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, 
     catalyst = Dense(catalyst_dim, activation='softmax', kernel_initializer='glorot_normal')(x)
 
     decoder = Model(inputs=[In1, In_latent], outputs=[xt, xp, adds, catalyst])
+        
+    xt = xt * t_mask
+    xp = xp * p_mask
+    
+    train_decoder = Model(inputs=[In1, In2, In_latent], outputs=[xt, xp, adds, catalyst])
     #--------------------------------------------------------------------------
 
     C = Input(shape=(1,))
 
     e = encoder([In1, In2])
-    d = decoder([In1, e])
+    d = train_decoder([In1, In2, e])
 
     model = Model(inputs=[In1, In2, C], outputs=d)
     #--------------------------------------------------------------------------
@@ -529,6 +551,12 @@ def get_h_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds_dim
     In1 = Input(shape=(in_dim,))
     In2 = Input(shape=(out_dim,))
     
+    t_bits = In2[:, :temperature_dim]
+    p_bits = In2[:, temperature_dim:pressure_dim]
+    
+    t_mask = K.sum(t_bits, axis=-1, keepdims=True)
+    p_mask = K.sum(p_bits, axis=-1, keepdims=True)
+    
     x = Dense(512, kernel_initializer='he_normal')(In1)
     x = BatchNormalization(axis=-1)(x)
     x = FTSwish()(x)
@@ -568,10 +596,15 @@ def get_h_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds_dim
     catalyst = Dense(catalyst_dim, activation='softmax', kernel_initializer='glorot_normal')(x)
 
     decoder = Model(inputs=[In1, In_latent], outputs=[xt, xp, adds, catalyst])
+    
+    xt = xt * t_mask
+    xp = xp * p_mask
+    
+    train_decoder = Model(inputs=[In1, In2, In_latent], outputs=[xt, xp, adds, catalyst])   
     #--------------------------------------------------------------------------
 
     e = encoder([In1, In2])
-    d = decoder([In1, e])
+    d = train_decoder([In1, In2, e])
 
     model = Model(inputs=[In1, In2], outputs=d)
     #--------------------------------------------------------------------------
