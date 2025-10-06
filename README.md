@@ -6,12 +6,14 @@ Tensorflow implementation of the model described in the paper Conditional Variat
 * **descriptors_generation.py** - functions for data preparation (x, y generation)
 * **cvae_models.py** - functions for RC CVAE modeling
 * **Run_VAEs.ipynb** - tutorial 
-* **example_data/example_hydrogenation_USPTO.rdf** - example dataset
-* **example_data/acids_bases_poisons_list.txt** - list of additives: acids, bases, catalytic poisons
-* **example_data/catalysts_list.txt** - list of catalysts
+* **data/** - Dataset directory containing some data used in this study
+* **data/Reaxys_IDs/** - Reaxys database identifiers for the test sets used in models evaluation.
+* **data/example_data/example_hydrogenation_USPTO.rdf** - example dataset
+* **data/example_data/acids_bases_poisons_list.txt** - list of additives: acids, bases, catalytic poisons
+* **data/example_data/catalysts_list.txt** - list of catalysts
 
 ## Data
-Note: Because the Reaxys database is commercially available, we do not have permission to release the datasets used in this paper to the public. Instead, we provide an example dataset ("example_data/example_hydrogenation_USPTO.rdf") so that anyone can test the code. It contains some hydrogenation chemical reaction records from USPTO database, preliminary standardized.
+Note: Due to the commercial nature of the Reaxys database, we are unable to publicly release the complete datasets used in this study. Instead, we provide Reaxys IDs for the test sets (data/Reaxys_IDs/)  and an example dataset of hydrogenation reactions from the USPTO database ("data/example_data/example_hydrogenation_USPTO.rdf") to enable code testing and validation. These hydrogenation reactions have been preliminarily standardized.
 
 ## Usage
 Example of usage can be found in Run_VAEs.ipynb
@@ -38,7 +40,7 @@ Only python 3.6
 3. Rename Fragmentor file to fragmentor-2017.x
 
 ## Citation
-@Article{Mazitov2024,
+@Article{Mazitov2025,
   title={Conditional variational autoEncoder to predict suitable conditions for hydrogenation reactions},
   author={Mazitov, Daniyar A. and Poyezzhayeva, Assima and Afonina, Valentina A. and Gimadiev, Timur R. and Madzhidov, Timur I.},
 }exa
