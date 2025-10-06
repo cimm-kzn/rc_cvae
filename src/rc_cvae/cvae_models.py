@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2024 Daniyar Mazitov <daniyarttt@gmail.com>
-# Copyright (c) 2024 Valentina Afonina <valiaafo@yandex.ru>
+# Copyright (c) 2025 Daniyar Mazitov <daniyarttt@gmail.com>
+# Copyright (c) 2025 Valentina Afonina <valiaafo@yandex.ru>
 #  This file is part of RC_CVAE
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -350,7 +350,7 @@ def get_gauss_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds
     In2 = Input(shape=(out_dim,))
     
     t_bits = In2[:, :temperature_dim]
-    p_bits = In2[:, temperature_dim:pressure_dim]
+    p_bits = In2[:, temperature_dim:temperature_dim+pressure_dim]
     
     t_mask = K.sum(t_bits, axis=-1, keepdims=True)
     p_mask = K.sum(p_bits, axis=-1, keepdims=True)
@@ -429,7 +429,7 @@ def get_rnf_gauss_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, 
     In2 = Input(shape=(out_dim,))
     
     t_bits = In2[:, :temperature_dim]
-    p_bits = In2[:, temperature_dim:pressure_dim]
+    p_bits = In2[:, temperature_dim:temperature_dim+pressure_dim]
     
     t_mask = K.sum(t_bits, axis=-1, keepdims=True)
     p_mask = K.sum(p_bits, axis=-1, keepdims=True)
@@ -552,7 +552,7 @@ def get_h_model(trained_emb_model_path, in_dim, out_dim, latent_dim=32, adds_dim
     In2 = Input(shape=(out_dim,))
     
     t_bits = In2[:, :temperature_dim]
-    p_bits = In2[:, temperature_dim:pressure_dim]
+    p_bits = In2[:, temperature_dim:temperature_dim+pressure_dim]
     
     t_mask = K.sum(t_bits, axis=-1, keepdims=True)
     p_mask = K.sum(p_bits, axis=-1, keepdims=True)
