@@ -26,15 +26,15 @@ Example of usage can be found in Run_VAEs.ipynb
 
 Only python 3.6
 
-* numpy == 1.18.1
-* tensorflow-gpu == 2.1.0 ; python_version == '3.6'
-* tensorflow == 2.1.0
-* tensorflow_probability == 0.9.0
-* keras == 2.2.4
-* h5py == 2.10.0
+* numpy ~= 1.18.1
+* tensorflow-gpu ~= 2.1.2 ; python_version == '3.6'
+* tensorflow ~= 2.1.2
+* tensorflow_probability ~= 0.9.0
+* keras ~= 2.2.4
+* h5py ~= 2.10.0
 * git+https://github.com/cimm-kzn/s-vae-tf.git
 * cgrtools == 3.1.9
-* CIMtools==3.1.0
+* CIMtools == 3.1.0
 * [Fragmentor](https://github.com/cimm-kzn/CIMtools/tree/master/Fragmentor)
 
 ## Installation
