@@ -13,7 +13,11 @@ Tensorflow implementation of the model described in the paper Conditional Variat
 * **data/example_data/catalysts_list.txt** - list of catalysts
 
 ## Data
-Note: Due to the commercial nature of the Reaxys database, we are unable to publicly release the complete datasets used in this study. Instead, we provide Reaxys IDs for the test sets (data/Reaxys_IDs/)  and an example dataset of hydrogenation reactions from the USPTO database ("data/example_data/example_hydrogenation_USPTO.rdf") to enable code testing and validation. These hydrogenation reactions have been preliminarily standardized.
+Note: Due to the commercial nature of the Reaxys® database, we are unable to publicly release the complete datasets used in this study. 
+
+*Reaxys® is a trademark of Elsevier Limited. Copyright © 2022 Elsevier Limited except certain content provided by third parties.*
+
+Instead, we provide Reaxys IDs for the test sets (data/Reaxys_IDs/)  and an example dataset of hydrogenation reactions from the USPTO database ("data/example_data/example_hydrogenation_USPTO.rdf") to enable code testing and validation. These hydrogenation reactions have been preliminarily standardized.
 
 ## Usage
 Example of usage can be found in Run_VAEs.ipynb
