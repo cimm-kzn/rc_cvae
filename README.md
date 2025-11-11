@@ -7,7 +7,7 @@ Tensorflow implementation of the model described in the paper Conditional Variat
 * **cvae_models.py** - functions for RC CVAE modeling
 * **Run_VAEs.ipynb** - tutorial 
 * **data/** - Dataset directory containing some data used in this study
-* **data/Reaxys_IDs/** - Reaxys database identifiers for the test sets used in models evaluation.
+* **data/Reaxys_IDs/** - Reaxys® database identifiers for the test sets used in models evaluation.
 * **data/example_data/example_hydrogenation_USPTO.rdf** - example dataset
 * **data/example_data/acids_bases_poisons_list.txt** - list of additives: acids, bases, catalytic poisons
 * **data/example_data/catalysts_list.txt** - list of catalysts
@@ -17,7 +17,7 @@ Note: Due to the commercial nature of the Reaxys® database, we are unable to pu
 
 *Reaxys® is a trademark of Elsevier Limited. Copyright © 2022 Elsevier Limited except certain content provided by third parties.*
 
-Instead, we provide Reaxys IDs for the test sets (data/Reaxys_IDs/)  and an example dataset of hydrogenation reactions from the USPTO database ("data/example_data/example_hydrogenation_USPTO.rdf") to enable code testing and validation. These hydrogenation reactions have been preliminarily standardized.
+Instead, we provide Reaxys® IDs for the test sets (data/Reaxys_IDs/)  and an example dataset of hydrogenation reactions from the USPTO database ("data/example_data/example_hydrogenation_USPTO.rdf") to enable code testing and validation. These hydrogenation reactions have been preliminarily standardized.
 
 ## Usage
 Example of usage can be found in Run_VAEs.ipynb
